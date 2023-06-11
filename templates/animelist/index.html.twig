@@ -1,0 +1,138 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AnimelistController!{% endblock %}
+
+{% block body %}
+<style>
+    /*.example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; } */
+    
+    .item {
+        border-radius: 10px;
+        border: 1px solid #000;
+        background: #edf;
+        padding: 15px;
+        margin: 5px;
+        text-align: center;
+        }
+        .item img {
+        max-width: 70%;
+        height: auto;
+        }
+
+        .item .vod-name {
+        padding: 5px;
+        margin: 5px;
+        border: 1px solid #000;
+        }
+
+        .item .vod-name a{
+        color: black;
+        text-decoration: none;
+        display: block
+        }
+
+
+
+        
+        /* Responsive */
+        @media ( min-width : 600px ){
+        .flexbox{
+            display: -webkit-flex;
+            display: flex;
+            -webkit-flex-wrap: wrap;
+            flex-wrap: wrap;
+        }
+
+        .item {
+            width: 25%;
+        }
+        .item img {
+            max-width: 70%;
+            height: auto;
+        }
+
+        .item .vod-name {
+            /* padding: 5px;
+            margin: 5px; */
+            border: 1px solid #000;
+            box-shadow: 0 0 3px grey;    
+            border-radius: 3px;
+        }
+
+        .item .vod-name a{
+            color: black;
+            text-decoration: none;
+            /* display: block */
+        }
+    }
+
+</style>
+
+<!-- 検索 -->
+<form action="/animelist" method="GET">
+  <!-- 年(初期値は現在のDateから取得) -->
+  <select name="year">
+    <option value="">年</option>
+    <option value="2022">2022</option>
+    <option value="2021">2021</option>
+    <option value="2020">2020</option>
+    <option value="2019">2019</option>
+    <option value="2018">2018</option>
+  </select>
+  <!-- 季節(初期値は現在のDateから取得) -->
+  <select name="season">
+    <option value="">季節</option>
+    <option value="spring">春</option>
+    <option value="summer">夏</option>
+    <option value="autumn">秋</option>
+    <option value="winter">冬</option>
+  </select>
+
+  <input name="" type="submit" value="検索">
+</form>
+
+
+  <h2>{{ year }}年 {{ season_ja }}アニメ</h2>
+
+
+<div class="flexbox">
+    {% for anime in animelist %}
+        <div class="item">
+            <!-- アニメの画像を表示 -->
+            <img src="{{ anime.image }}" ?></img>
+            <!-- アニメタイトルを表示 -->
+            <p>{{ anime.title }}</p>
+            <div class="flexbox">
+                {% if anime.entitySubscription.amazon%}
+                    <div class="vod-name"><a href="{{ anime.entitySubscription.amazon }}" target="_blank">amazon</a></div>
+                {% endif %}
+                {% if anime.entitySubscription.hulu%}
+                    <div class="vod-name"><a href="{{ anime.entitySubscription.hulu }}" target="_blank">hulu</a></div>
+                {% endif %}
+                {% if anime.entitySubscription.netflix%}
+                    <div class="vod-name"><a href="{{ anime.entitySubscription.netflix }}" target="_blank">NETFLIX</a></div>
+                {% endif %}
+                {% if anime.entitySubscription.watcha%}
+                    <div class="vod-name"><a href="{{ anime.entitySubscription.watcha }}" target="_blank">watcha</a></div>
+                {% endif %}
+                {% if anime.entitySubscription.dAnime%}
+                    <div class="vod-name"><a href="{{ anime.entitySubscription.dAnime }}" target="_blank">dアニメ</a></div>
+                {% endif %}
+                {% if anime.entitySubscription.tsutaya%}
+                    <div class="vod-name"><a href="{{ anime.entitySubscription.tsutaya }}" target="_blank">TSUTAYA</a></div>
+                {% endif %}
+            </div>
+        </div>
+
+        <p>
+            {% for entitySubscription in anime.entitySubscription %}
+                {% for key, value in entitySubscription %}
+                    <span>{{ key }}</span> 
+                    <span>{{ value }}</span>                 
+                {% endfor %}
+            {% endfor %}
+        </p>
+    {% endfor %}
+
+{% endblock %}
